@@ -1,5 +1,6 @@
 package com.blog.writeapi.utils.mappers;
 
+import com.blog.writeapi.dtos.user.CreateUserDTO;
 import com.blog.writeapi.dtos.user.UpdateUserDTO;
 import com.blog.writeapi.dtos.user.UserDTO;
 import com.blog.writeapi.models.UserModel;
@@ -21,6 +22,10 @@ public class UserMapper {
     }
 
     public void merge(UpdateUserDTO dto, UserModel target) {
+        mapper.map(dto, target);
+    }
+
+    public void merge(CreateUserDTO dto, UserModel target) {
         mapper.map(dto, target);
     }
 
