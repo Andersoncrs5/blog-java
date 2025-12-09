@@ -1,3 +1,6 @@
 spring:
   application:
     name: writeapi
+snowflake:
+  worker-id: 5
+  datacenter-id: 1
