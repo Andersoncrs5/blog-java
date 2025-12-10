@@ -86,7 +86,7 @@ public class TokenService implements ITokenService {
     public String validateToken(String token) {
         log.debug("Validating token...");
         if (token == null || token.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token não pode ser nulo ou vazio.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
         if (secret == null || secret.isBlank()) {
@@ -98,18 +98,18 @@ public class TokenService implements ITokenService {
             MACVerifier verifier = new MACVerifier(secret.getBytes());
 
             if (!signedJWT.verify(verifier)) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Assinatura do token inválida.");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
             }
 
             JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
             if (claimsSet.getExpirationTime().before(new Date())) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token expired.");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
             }
 
             return claimsSet.getSubject();
         } catch (ParseException | JOSEException e) {
             log.debug("Error the to parse or to check the token: {}", e.getMessage());
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalid.", e);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
     }
 
