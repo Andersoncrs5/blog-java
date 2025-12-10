@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,7 @@ import java.io.IOException;
 public class SecurityFilter extends OncePerRequestFilter {
     private final ITokenService tokenService;
     private final UserRepository userRepository;
+    private final CustomUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -36,22 +38,22 @@ public class SecurityFilter extends OncePerRequestFilter {
         try {
             String email = tokenService.validateToken(token);
 
-            if (email != null && !email.isBlank()) {
-                UserDetails user = this.userRepository.findByEmail(email);
+            if (email == null && email.isBlank()) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
-                if (user != null) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            user,
-                            null,
-                            user.getAuthorities()
-                    );
+            boolean exists = this.userRepository.existsByEmail(email);
 
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    log.debug("User '{}' authenticated successfully.", email);
-                } else {
-                    log.debug("Details of user not found for login: {}", email);
-                }
-            }
+            if (!exists) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities()
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.debug("User '{}' authenticated successfully.", email);
 
             filterChain.doFilter(request, response);
 
