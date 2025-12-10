@@ -24,7 +24,7 @@ public class RoleService implements IRoleService {
     }
 
     @Override
-    public Optional<RoleModel> findByid(Long id) {
+    public Optional<RoleModel> findById(Long id) {
         return this.repository.findById(id);
     }
 
@@ -46,6 +46,7 @@ public class RoleService implements IRoleService {
     @Override
     public RoleModel create(RoleModel role) {
         role.setId(snowflakeIdGenerator.nextId());
+        role.setName(role.getName().toUpperCase());
 
         return this.repository.save(role);
     }
