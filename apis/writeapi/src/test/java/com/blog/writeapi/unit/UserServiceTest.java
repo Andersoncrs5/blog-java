@@ -1,0 +1,104 @@
+package com.blog.writeapi.unit;
+
+import cn.hutool.core.lang.Snowflake;
+import com.blog.writeapi.dtos.user.CreateUserDTO;
+import com.blog.writeapi.models.UserModel;
+import com.blog.writeapi.repositories.UserRepository;
+import com.blog.writeapi.services.providers.UserService;
+import com.github.dozermapper.core.Mapper;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+
+import java.util.Optional;
+
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class UserServiceTest {
+
+    @Mock private UserRepository repository;
+    @Mock private Argon2PasswordEncoder encoder;
+    @Mock private Snowflake snowflakeIdGenerator;;
+    @Mock private Mapper mapper;
+
+    @InjectMocks
+    private UserService service;
+
+    private final Long FAKE_ID = 2000000000000000000L;
+    private final String ENCRYPTED_PASSWORD = "abc";
+
+    UserModel user = UserModel.builder()
+            .id(1998780200074176609L)
+            .name("user")
+            .email("user@gmail.com")
+            .password("12345678")
+            .build();
+
+    @Test
+    void shouldGetUserById() {
+        when(repository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        Optional<UserModel> userModel = this.service.GetById(user.getId());
+
+        assertThat(userModel.isPresent()).isTrue();
+
+        assertThat(userModel.get().getId()).isEqualTo(user.getId());
+
+        verify(repository, times(1)).findById(user.getId());
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    void shouldReturnNullWhenGetUserById() {
+        when(repository.findById(user.getId())).thenReturn(Optional.empty());
+
+        Optional<UserModel> userModel = this.service.GetById(user.getId());
+
+        assertThat(userModel.isEmpty()).isTrue();
+
+        verify(repository, times(1)).findById(user.getId());
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    void shouldReturnTrueWhenCheckIfExistsUserById() {
+        when(repository.existsById(user.getId())).thenReturn(true);
+
+        Boolean exists = this.service.ExistsById(user.getId());
+
+        assertThat(exists).isTrue();
+
+        verify(repository, times(1)).existsById(user.getId());
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    void shouldReturnFalseWhenCheckIfExistsUserById() {
+        when(repository.existsById(user.getId())).thenReturn(false);
+
+        Boolean exists = this.service.ExistsById(user.getId());
+
+        assertThat(exists).isFalse();
+
+        verify(repository, times(1)).existsById(user.getId());
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    void shouldDeleteUser() {
+        doNothing().when(repository).delete(user);
+
+        this.service.Delete(user);
+
+        verify(repository, times(1)).delete(user);
+        verifyNoMoreInteractions(repository);
+    }
+
+
+}
