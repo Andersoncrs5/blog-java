@@ -1,4 +1,17 @@
+server:
+  port: 8888
 spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:4000/blog_db?allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
   argon:
     saltLength: 16
     hashLength: 32
