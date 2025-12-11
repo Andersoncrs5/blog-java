@@ -31,9 +31,7 @@ public class RoleServiceTest {
 
     @BeforeEach
     void setup() {
-        role.setId(1998780200074176609L);
-        role.setName("USER");
-        role.setCreatedAt(LocalDateTime.now());
+
     }
 
     @Test
