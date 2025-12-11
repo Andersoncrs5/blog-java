@@ -21,11 +21,11 @@ public class UserRoleService implements IUserRoleService {
 
     @Override
     public UserRoleModel create(UserModel user, RoleModel role) {
-        UserRoleModel userRoleModel = new UserRoleModel();
-
-        user.setId(generator.nextId());
-        userRoleModel.setUser(user);
-        userRoleModel.setRole(role);
+        UserRoleModel userRoleModel = new UserRoleModel().toBuilder()
+                .id(generator.nextId())
+                .user(user)
+                .role(role)
+                .build();
 
         return this.repository.save(userRoleModel);
     }
