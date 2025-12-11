@@ -13,4 +13,5 @@ public interface UserRepository extends JpaRepository<@NonNull UserModel, @NonNu
 
     boolean existsByEmail(String email);
 
+    boolean existsByUsername(String username);
 }
