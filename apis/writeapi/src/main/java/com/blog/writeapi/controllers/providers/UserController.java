@@ -33,8 +33,6 @@ public class UserController implements UserControllerDocs {
     public ResponseEntity<?> getUser(HttpServletRequest request) {
         Long userId = this.tokenService.extractUserIdFromRequest(request);
 
-        log.debug("User id {}", userId );
-
         Optional<UserModel> opt = this.userService.GetById(userId);
 
         if (opt.isEmpty()) {
@@ -63,5 +61,40 @@ public class UserController implements UserControllerDocs {
 
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<?> deleteUser(HttpServletRequest request) {
+        Long userId = this.tokenService.extractUserIdFromRequest(request);
+
+        Optional<UserModel> opt = this.userService.GetById(userId);
+
+        if (opt.isEmpty()) {
+            ResponseHttp<Object> res = new ResponseHttp<>(
+                null,
+                    "User not found",
+                    UUID.randomUUID().toString(),
+                    1,
+                    false,
+                    OffsetDateTime.now()
+            );
+
+            return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
+        }
+
+        this.userService.Delete(opt.get());
+
+        ResponseHttp<Object> res = new ResponseHttp<>(
+                null,
+                "User deleted",
+                UUID.randomUUID().toString(),
+                1,
+                true,
+                OffsetDateTime.now()
+        );
+
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+
 
 }
