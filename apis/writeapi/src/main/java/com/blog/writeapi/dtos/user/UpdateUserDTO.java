@@ -1,9 +1,14 @@
 package com.blog.writeapi.dtos.user;
 
-import java.util.Optional;
+import jakarta.validation.constraints.Size;
 
 public record UpdateUserDTO(
-    Optional<String> name,
-    Optional<String> username,
-    Optional<String> password
-){}
+        @Size(min = 5, max = 100)
+        String name,
+        @Size(min = 6, max = 100)
+        String username,
+        @Size(min = 8, max = 60)
+        String password
+){
+
+}
