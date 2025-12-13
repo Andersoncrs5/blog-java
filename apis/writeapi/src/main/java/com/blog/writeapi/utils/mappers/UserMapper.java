@@ -1,28 +1,26 @@
 package com.blog.writeapi.utils.mappers;
 
-import com.blog.writeapi.dtos.user.CreateUserDTO;
 import com.blog.writeapi.dtos.user.UpdateUserDTO;
 import com.blog.writeapi.dtos.user.UserDTO;
 import com.blog.writeapi.models.UserModel;
-import com.github.dozermapper.core.Mapper;
-import lombok.RequiredArgsConstructor;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-@RequiredArgsConstructor
-public class UserMapper {
-    private final Mapper mapper;
+@Mapper(componentModel = "spring")
+public interface UserMapper {
 
-    public UserModel toModel(UserDTO dto) {
-        return mapper.map(dto, UserModel.class);
-    }
+    UserModel toModel(UserDTO dto);
 
-    public UserDTO toDTO(UserModel user) {
-        return mapper.map(user, UserDTO.class);
-    }
+    UserDTO toDTO(UserModel user);
 
-    public void merge(UpdateUserDTO dto, UserModel target) {
-        mapper.map(dto, target);
+    void merge(UpdateUserDTO dto, @MappingTarget UserModel target);
+
+    default String mapOptionalString(Optional<String> optional) {
+        return optional.isPresent() ? optional.orElse(null) : null;
     }
 
 }
