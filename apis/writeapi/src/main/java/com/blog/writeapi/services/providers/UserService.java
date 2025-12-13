@@ -25,6 +25,11 @@ public class UserService implements IUserService {
     private final Argon2PasswordEncoder encoder;
 
     @Override
+    public Boolean existsByUsername(String username) {
+        return this.repository.existsByUsername(username);
+    }
+
+    @Override
     public Optional<UserModel> GetById(Long id) {
         return repository.findById(id);
     }
@@ -42,6 +47,9 @@ public class UserService implements IUserService {
     @Override
     public UserModel Update(UpdateUserDTO dto, UserModel user) {
         mapper.merge(dto, user);
+
+        if (dto.password().isPresent())
+            user.setPassword(encoder.encode(dto.password().get()));
 
         return this.repository.save(user);
     }

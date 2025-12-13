@@ -14,4 +14,5 @@ public interface IUserService {
     UserModel Create(CreateUserDTO dto);
     Optional<UserModel> findByEmail(String email);
     UserModel UpdateSimple(UserModel user);
+    Boolean existsByUsername(String username);
 }
