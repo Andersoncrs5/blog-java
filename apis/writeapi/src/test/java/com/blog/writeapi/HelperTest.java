@@ -26,38 +26,43 @@ public class HelperTest {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
 
-    public ResponseUserTest createUser() throws Exception {
-        String key = UUID.fastUUID().toString();
+    public ResponseUserTest createUser() {
+        try {
+            String key = UUID.fastUUID().toString();
 
-        CreateUserDTO dto = new CreateUserDTO(
-                "name" + key,
-                "username" + key,
-                "user" + key + "@gmail.com",
-                "12345678"
-        );
+            CreateUserDTO dto = new CreateUserDTO(
+                    "name" + key,
+                    "username" + key,
+                    "user" + key + "@gmail.com",
+                    "12345678"
+            );
 
-        MvcResult result = mockMvc.perform(post("/v1/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isCreated())
-                .andReturn();
+            MvcResult result = mockMvc.perform(post("/v1/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(dto)))
+                    .andExpect(status().isCreated())
+                    .andReturn();
 
-        String registerJson = result.getResponse().getContentAsString();
-        TypeReference<ResponseHttp<ResponseTokens>> typeRef =
-                new TypeReference<>() {};
+            String registerJson = result.getResponse().getContentAsString();
+            TypeReference<ResponseHttp<ResponseTokens>> typeRef =
+                    new TypeReference<>() {
+                    };
 
-        ResponseHttp<ResponseTokens> response =
-                objectMapper.readValue(registerJson, typeRef);
+            ResponseHttp<ResponseTokens> response =
+                    objectMapper.readValue(registerJson, typeRef);
 
-        assertThat(response.status()).isEqualTo(true);
-        assertThat(response.message()).isNotBlank();
-        assertThat(response.data().token()).isNotBlank();
-        assertThat(response.data().refreshToken()).isNotBlank();
+            assertThat(response.status()).isEqualTo(true);
+            assertThat(response.message()).isNotBlank();
+            assertThat(response.data().token()).isNotBlank();
+            assertThat(response.data().refreshToken()).isNotBlank();
 
-        return new ResponseUserTest(
-                response.data(),
-                dto
-        );
+            return new ResponseUserTest(
+                    response.data(),
+                    dto
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
