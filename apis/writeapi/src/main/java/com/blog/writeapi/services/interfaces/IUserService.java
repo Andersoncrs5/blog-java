@@ -12,4 +12,6 @@ public interface IUserService {
     void Delete(UserModel user);
     UserModel Update(UpdateUserDTO dto, UserModel user);
     UserModel Create(CreateUserDTO dto);
+    Optional<UserModel> findByEmail(String email);
+    UserModel UpdateSimple(UserModel user);
 }

@@ -61,4 +61,10 @@ public class UserService implements IUserService {
         return repository.save(user);
     }
 
+    @Override
+    public Optional<UserModel> findByEmail(String email) { return repository.findByEmail(email); }
+
+    @Override
+    public UserModel UpdateSimple(UserModel user) { return this.repository.save(user); }
+
 }
