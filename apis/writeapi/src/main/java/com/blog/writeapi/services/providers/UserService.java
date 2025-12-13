@@ -8,11 +8,13 @@ import com.blog.writeapi.repositories.UserRepository;
 import com.blog.writeapi.services.interfaces.IUserService;
 import com.blog.writeapi.utils.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService implements IUserService {
@@ -47,7 +49,11 @@ public class UserService implements IUserService {
     @Override
     public UserModel Create(CreateUserDTO dto) {
         UserModel user = new UserModel();
-        mapper.merge(dto, user);
+
+        user.setName(dto.name());
+        user.setUsername(dto.username());
+        user.setEmail(dto.email());
+        user.setPassword(dto.password());
 
         user.setId(snowflakeIdGenerator.nextId());
         user.setPassword(encoder.encode(user.getPassword()));
