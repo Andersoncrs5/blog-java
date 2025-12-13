@@ -124,6 +124,13 @@
             <artifactId>lombok-mapstruct-binding</artifactId>
             <version>0.2.0</version> <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>2.20.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
