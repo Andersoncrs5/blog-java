@@ -1,15 +1,15 @@
 package com.blog.writeapi.integration;
 
 import cn.hutool.core.lang.UUID;
+import com.blog.writeapi.HelperTest;
 import com.blog.writeapi.dtos.user.CreateUserDTO;
+import com.blog.writeapi.dtos.user.LoginUserDTO;
 import com.blog.writeapi.repositories.UserRepository;
 import com.blog.writeapi.utils.res.ResponseHttp;
 import com.blog.writeapi.utils.res.ResponseTokens;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.blog.writeapi.utils.res.ResponseUserTest;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -39,6 +37,9 @@ public class AuthControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private HelperTest helper;
 
     @BeforeEach
     void setup() {
@@ -75,6 +76,64 @@ public class AuthControllerTest {
         assertThat(response.data().refreshToken()).isNotBlank();
     }
 
+    @Test
+    void shouldUserLogInSystem() throws Exception {
+        ResponseUserTest res = this.helper.createUser();
 
+        LoginUserDTO dto = new LoginUserDTO(
+                res.dto().email(),
+                res.dto().password()
+        );
+
+        MvcResult result = mockMvc.perform(post(this.URL + "/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String registerJson = result.getResponse().getContentAsString();
+        TypeReference<ResponseHttp<ResponseTokens>> typeRef =
+                new TypeReference<>() {};
+
+        ResponseHttp<ResponseTokens> response =
+                objectMapper.readValue(registerJson, typeRef);
+
+        assertThat(response.status()).isEqualTo(true);
+        assertThat(response.message()).isNotBlank();
+        assertThat(response.data().token()).isNotBlank();
+        assertThat(response.data().refreshToken()).isNotBlank();
+    }
+
+    @Test
+    void shouldFailUserLogInSystemBecauseEmailWrong() throws Exception {
+        ResponseUserTest res = this.helper.createUser();
+
+        LoginUserDTO dto = new LoginUserDTO(
+                "user11111@gmail.com",
+                res.dto().password()
+        );
+
+        mockMvc.perform(post(this.URL + "/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isUnauthorized())
+                .andReturn();
+    }
+
+    @Test
+    void shouldFailUserLogInSystemBecausePasswordWrong() throws Exception {
+        ResponseUserTest res = this.helper.createUser();
+
+        LoginUserDTO dto = new LoginUserDTO(
+                res.dto().email(),
+                "12312312"
+        );
+
+        mockMvc.perform(post(this.URL + "/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isUnauthorized())
+                .andReturn();
+    }
 
 }
