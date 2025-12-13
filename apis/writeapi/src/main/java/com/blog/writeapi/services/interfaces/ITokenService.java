@@ -13,6 +13,6 @@ public interface ITokenService {
     String generateRefreshToken(UserModel user);
     Map<String, Object> extractAllClaims(String token);
     String extractSubjectFromRequest(HttpServletRequest request);
-    String extractUserIdFromRequest(HttpServletRequest request);
+    Long extractUserIdFromRequest(HttpServletRequest request);
 
 }

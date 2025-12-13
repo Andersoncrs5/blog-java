@@ -162,9 +162,12 @@ public class TokenService implements ITokenService {
     }
 
     @Override
-    public String extractUserIdFromRequest(HttpServletRequest request) {
+    public Long extractUserIdFromRequest(HttpServletRequest request) {
+        log.debug("Extracting id of token...");
         String token = extractTokenFromRequest(request);
-        return getClaimsFromToken(token).getClaim("userId").toString();
+        Long userId = (Long) getClaimsFromToken(token).getClaim("userId");
+        log.debug("Id extracted with success! Id: {}", userId);
+        return userId;
     }
 
     private String extractTokenFromRequest(HttpServletRequest request) {
