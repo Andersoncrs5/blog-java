@@ -27,8 +27,7 @@ public class UserServiceTest {
     @Mock private Snowflake snowflakeIdGenerator;;
     @Mock private Mapper mapper;
 
-    @InjectMocks
-    private UserService service;
+    @InjectMocks private UserService service;
 
     private final Long FAKE_ID = 2000000000000000000L;
     private final String ENCRYPTED_PASSWORD = "abc";
@@ -122,6 +121,30 @@ public class UserServiceTest {
         assertThat(optional.isEmpty()).isTrue();
 
         verify(this.repository, times(1)).findByEmail(user.getEmail());
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    void shouldReturnTrueWhenExistsByUsername() {
+        when(repository.existsByUsername(user.getUsername())).thenReturn(true);
+
+        Boolean exists = this.service.existsByUsername(user.getUsername());
+
+        assertThat(exists).isTrue();
+
+        verify(repository, times(1)).existsByUsername(user.getUsername());
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    void shouldReturnFalseWhenExistsByUsername() {
+        when(repository.existsByUsername(user.getUsername())).thenReturn(false);
+
+        Boolean exists = this.service.existsByUsername(user.getUsername());
+
+        assertThat(exists).isFalse();
+
+        verify(repository, times(1)).existsByUsername(user.getUsername());
         verifyNoMoreInteractions(repository);
     }
 
