@@ -48,8 +48,8 @@ public class UserService implements IUserService {
     public UserModel Update(UpdateUserDTO dto, UserModel user) {
         mapper.merge(dto, user);
 
-        if (dto.password().isPresent())
-            user.setPassword(encoder.encode(dto.password().get()));
+        if (dto.password() != null && !dto.password().isBlank())
+            user.setPassword(encoder.encode(dto.password()));
 
         return this.repository.save(user);
     }
