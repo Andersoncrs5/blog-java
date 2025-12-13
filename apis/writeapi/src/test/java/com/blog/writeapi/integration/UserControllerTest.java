@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UserControllerTest {
-    private final String URL = "/v1/user/";
+    private final String URL = "/v1/user";
 
     @Autowired
     private MockMvc mockMvc;
@@ -60,6 +60,25 @@ public class UserControllerTest {
         assertThat(response.message()).isNotBlank();
         assertThat(response.status()).isEqualTo(true);
         assertThat(response.data().email()).isEqualTo(userData.dto().email());
+    }
+
+    @Test
+    void shouldDeleteUser() throws Exception {
+        ResponseUserTest userData = helper.createUser();
+
+        MvcResult result = mockMvc.perform(delete(this.URL)
+                        .header("Authorization", "Bearer " + userData.tokens().token()))
+                .andExpect(status().isOk()).andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        TypeReference<ResponseHttp<Object>> typeRef = new TypeReference<>() {};
+
+        ResponseHttp<Object> response =
+                objectMapper.readValue(json, typeRef);
+
+        assertThat(response.message()).isNotBlank();
+        assertThat(response.traceId()).isNotBlank();
+        assertThat(response.status()).isEqualTo(true);
     }
 
 }
