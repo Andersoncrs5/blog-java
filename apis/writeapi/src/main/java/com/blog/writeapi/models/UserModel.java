@@ -42,6 +42,9 @@ public class UserModel {
     @Column(length = 500)
     private String refreshToken = "";
 
+    @Version
+    private Long version;
+
     @CreatedDate
     private LocalDateTime createdAt;
 

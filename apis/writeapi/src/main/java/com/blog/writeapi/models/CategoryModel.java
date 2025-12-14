@@ -51,6 +51,9 @@ public class CategoryModel {
     @JoinColumn(name = "parent_id")
     private CategoryModel parent;
 
+    @Version
+    private Long version;
+
     @CreatedDate
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;

@@ -30,6 +30,9 @@ public class RoleModel {
     @Column
     private Boolean isActive = true;
 
+    @Version
+    private Long version;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
