@@ -21,6 +21,7 @@ import java.util.List;
 @Getter
 @ToString(exclude = {"parent", "children"})
 @Builder(toBuilder = true)
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryModel {
