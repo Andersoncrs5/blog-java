@@ -1,5 +1,15 @@
 server:
   port: 8888
+
+resilience4j:
+  retry:
+    instances:
+      super-adm-retry:
+        maxAttempts: 5
+        waitDuration: 5s
+        retryExceptions:
+          - org.springframework.dao.DataAccessException
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
