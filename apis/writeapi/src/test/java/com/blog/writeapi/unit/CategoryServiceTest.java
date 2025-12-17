@@ -222,7 +222,8 @@ public class CategoryServiceTest {
                 this.category.getSlug(),
                 this.category.getIsActive(),
                 this.category.getVisible(),
-                this.category.getDisplayOrder()
+                this.category.getDisplayOrder(),
+                null
         );
 
         when(generator.nextId()).thenReturn(category.getId());
