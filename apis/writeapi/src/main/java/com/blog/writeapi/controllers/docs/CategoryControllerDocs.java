@@ -1,9 +1,9 @@
 package com.blog.writeapi.controllers.docs;
 
 import com.blog.writeapi.dtos.category.CreateCategoryDTO;
+import com.blog.writeapi.dtos.category.UpdateCategoryDTO;
 import com.blog.writeapi.utils.res.ResponseHttp;
 import com.blog.writeapi.utils.res.classes.category.ResponseCategoryDTO;
-import com.blog.writeapi.utils.res.classes.user.ResponseUserDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,7 +29,12 @@ public interface CategoryControllerDocs {
             description = "Category not found",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ResponseHttp.class)))
-    ResponseEntity<?> create(@Valid @RequestBody CreateCategoryDTO dto, HttpServletRequest request);
+    ResponseEntity<?> create(
+            @Valid
+            @RequestBody
+            CreateCategoryDTO dto,
+            HttpServletRequest request
+    );
 
     @GetMapping("/{id}")
     @Operation(summary = "Get one category by id", tags = {tag})
@@ -63,6 +68,23 @@ public interface CategoryControllerDocs {
             @PathVariable
             @Positive(message = "The ID provided must be a positive number.")
             Long id,
+            HttpServletRequest request
+    );
+
+    @PatchMapping
+    @Operation(summary = "Update category", tags = {tag})
+    @ApiResponse(responseCode = "200",
+            description = "Result of update category",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ResponseCategoryDTO.class)))
+    @ApiResponse(responseCode = "404",
+            description = "Category not found",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ResponseHttp.class)))
+    ResponseEntity<?> update(
+            @Valid
+            @RequestBody
+            UpdateCategoryDTO dto,
             HttpServletRequest request
     );
 
