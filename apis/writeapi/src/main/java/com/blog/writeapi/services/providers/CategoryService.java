@@ -73,4 +73,19 @@ public class CategoryService implements ICategoryService {
         return this.repository.save(category);
     }
 
+    @Override
+    public CategoryModel update(UpdateCategoryDTO dto, CategoryModel category, CategoryModel parent) {
+        mapper.merge(dto, category);
+
+        if (Boolean.TRUE.equals(dto.isRoot())) {
+            category.setParent(null);
+        } else if (parent != null) {
+            category.setParent(parent);
+        }
+
+        return this.repository.save(category);
+    }
+
+
+
 }
