@@ -16,5 +16,7 @@ public interface CategoryMapper {
     CategoryModel toModel(CreateCategoryDTO dto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "parent", ignore = true)
     void merge(UpdateCategoryDTO dto, @MappingTarget CategoryModel category);
 }
