@@ -21,6 +21,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @EqualsAndHashCode
+@ToString
 @EntityListeners(AuditingEntityListener.class)
 public class TagModel {
 
