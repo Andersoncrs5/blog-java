@@ -26,27 +26,31 @@ public class CategoryService implements ICategoryService {
     private final CategoryMapper mapper;
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<CategoryModel> getById(Long id) { return this.repository.findById(id); }
 
     @Override
-    public Optional<CategoryModel> findByIdForUpdate(Long id) { return this.repository.findByIdForUpdate(id); }
-
-    @Override
+    @Transactional(readOnly = true)
     public Boolean existsById(Long id) { return repository.existsById(id); }
 
     @Override
+    @Transactional
     public void delete(CategoryModel category) { this.repository.delete(category); }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<CategoryModel> getByName(String name) { return this.repository.findByName(name); }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean existsByName(String name) { return repository.existsByName(name); }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<CategoryModel> getBySlug(String slug) { return this.repository.findBySlug(slug); }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean existsBySlug(String slug) { return repository.existsBySlug(slug); }
 
     /**
@@ -55,6 +59,7 @@ public class CategoryService implements ICategoryService {
      */
     @Override
     @Deprecated()
+    @Transactional
     public CategoryModel create(CreateCategoryDTO dto) {
         CategoryModel category = this.mapper.toModel(dto);
         category.setId(generator.nextId());
@@ -63,6 +68,7 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryModel create(CreateCategoryDTO dto, CategoryModel categoryModel) {
         CategoryModel category = this.mapper.toModel(dto);
         category.setId(generator.nextId());
