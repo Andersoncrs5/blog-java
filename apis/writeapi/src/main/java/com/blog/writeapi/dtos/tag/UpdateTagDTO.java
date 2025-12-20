@@ -1,29 +1,27 @@
 package com.blog.writeapi.dtos.tag;
 
 import com.blog.writeapi.utils.annotations.valid.global.StringClear.StringClear;
+import com.blog.writeapi.utils.annotations.valid.global.isId.IsId;
 import com.blog.writeapi.utils.annotations.valid.global.slug.Slug;
 import com.blog.writeapi.utils.annotations.valid.tag.existsTagById.ExistsTagById;
-import com.blog.writeapi.utils.annotations.valid.tag.existsTagByName.ExistsTagByName;
-import com.blog.writeapi.utils.annotations.valid.tag.existsTagBySlug.ExistsTagBySlug;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.blog.writeapi.utils.annotations.valid.tag.uniqueTagByName.UniqueTagByName;
+import com.blog.writeapi.utils.annotations.valid.tag.uniqueTagBySlug.UniqueTagBySlug;
 import jakarta.validation.constraints.Size;
 
 public record UpdateTagDTO(
 
-        @NotNull
+        @IsId
         @ExistsTagById
         Long id,
 
         @StringClear
         @Size(max = 70)
-        @ExistsTagByName
+        @UniqueTagByName
         String name,
 
-        @NotBlank
         @Size(max = 80)
         @Slug
-        @ExistsTagBySlug
+        @UniqueTagBySlug
         String slug,
 
         @Size(max = 200)
