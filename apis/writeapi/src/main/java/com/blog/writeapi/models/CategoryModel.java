@@ -1,13 +1,11 @@
 package com.blog.writeapi.models;
 
+import com.blog.writeapi.utils.bases.models.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
@@ -21,15 +19,10 @@ import java.util.List;
 @Setter
 @Getter
 @ToString(exclude = {"parent", "children"})
-@Builder(toBuilder = true)
-@EqualsAndHashCode
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryModel {
-
-    @Id
-    @Column(name = "id", columnDefinition = "BIGINT UNSIGNED")
-    private Long id;
+public class CategoryModel extends BaseEntity {
 
     @Column(length = 150, unique = true, nullable = false)
     private String name;
@@ -53,18 +46,6 @@ public class CategoryModel {
     @JoinColumn(name = "parent_id")
     private CategoryModel parent;
 
-    @Version
-    private Long version;
-
-    @CreatedDate
-    @Column(updatable = false, nullable = false)
-    private OffsetDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private OffsetDateTime updatedAt;
-
     @OneToMany(mappedBy = "parent")
     private List<CategoryModel> children;
-
 }
