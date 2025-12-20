@@ -1,6 +1,7 @@
 package com.blog.writeapi.configs.exception;
 
 import com.blog.writeapi.utils.res.ResponseHttp;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.jspecify.annotations.NonNull;
@@ -15,6 +16,19 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(CallNotPermittedException.class)
+    public ResponseEntity<@NonNull ResponseHttp<Object>> handleCircuitBreakerOpen(CallNotPermittedException ex) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(new ResponseHttp<>(
+                        null,
+                        "System temporarily overloaded (Circuit Breaker Open).",
+                        UUID.randomUUID().toString(),
+                        0,
+                        false,
+                        OffsetDateTime.now()
+                ));
+    }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<@NonNull ResponseHttp<Object>> handleConstraintViolation(ConstraintViolationException ex) {
