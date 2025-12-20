@@ -2,14 +2,17 @@ package com.blog.writeapi.controllers.docs;
 
 import com.blog.writeapi.dtos.tag.CreateTagDTO;
 import com.blog.writeapi.utils.res.swagger.tag.ResponseTagDTO;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -19,9 +22,15 @@ public interface TagControllerDocs {
     @PostMapping
     @Operation(summary = "Create new tag", tags = {tag})
     @PreAuthorize("hasAnyAuthority('SUPER_ADM_ROLE', 'ADM_ROLE')")
+    @CircuitBreaker(name = "tagUpdateCB")
     @ApiResponse(responseCode = "201",
             description = "Create new tag",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ResponseTagDTO.class)))
     ResponseEntity<?> create(@Valid @RequestBody CreateTagDTO dto, HttpServletRequest request);
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get one tag", tags = {tag})
+    @CircuitBreaker(name = "tagGetCB")
+    ResponseEntity<?> get(@Positive Long id, HttpServletRequest request);
 }

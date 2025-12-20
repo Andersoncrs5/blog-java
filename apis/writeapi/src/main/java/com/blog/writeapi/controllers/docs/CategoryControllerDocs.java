@@ -4,6 +4,7 @@ import com.blog.writeapi.dtos.category.CreateCategoryDTO;
 import com.blog.writeapi.dtos.category.UpdateCategoryDTO;
 import com.blog.writeapi.utils.res.ResponseHttp;
 import com.blog.writeapi.utils.res.swagger.category.ResponseCategoryDTO;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,6 +21,7 @@ public interface CategoryControllerDocs {
 
     @PostMapping
     @Operation(summary = "Create new category", tags = {tag})
+    @CircuitBreaker(name = "tagCreateCB")
     @PreAuthorize("hasAnyAuthority('SUPER_ADM_ROLE', 'ADM_ROLE')")
     @ApiResponse(responseCode = "201",
             description = "Create new category",
@@ -38,6 +40,7 @@ public interface CategoryControllerDocs {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get one category by id", tags = {tag})
+    @CircuitBreaker(name = "tagGetCB")
     @ApiResponse(responseCode = "200",
             description = "Get category",
             content = @Content(mediaType = "application/json",
@@ -54,6 +57,7 @@ public interface CategoryControllerDocs {
     ) ;
 
     @DeleteMapping("/{id}")
+    @CircuitBreaker(name = "tagDeleteCB")
     @Operation(summary = "Delete one category by id", tags = {tag})
     @PreAuthorize("hasAnyAuthority('SUPER_ADM_ROLE', 'ADM_ROLE')")
     @ApiResponse(responseCode = "200",
@@ -73,6 +77,7 @@ public interface CategoryControllerDocs {
 
     @PatchMapping
     @Operation(summary = "Update category", tags = {tag})
+    @CircuitBreaker(name = "tagUpdateCB")
     @ApiResponse(responseCode = "200",
             description = "Result of update category",
             content = @Content(mediaType = "application/json",

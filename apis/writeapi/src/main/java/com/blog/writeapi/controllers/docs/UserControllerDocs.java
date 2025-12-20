@@ -3,6 +3,7 @@ package com.blog.writeapi.controllers.docs;
 import com.blog.writeapi.dtos.user.UpdateUserDTO;
 import com.blog.writeapi.utils.res.ResponseHttp;
 import com.blog.writeapi.utils.res.swagger.user.ResponseUserDTO;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,6 +17,7 @@ public interface UserControllerDocs {
 
     @GetMapping("/me")
     @Operation(summary = "Get user", tags = {"User"})
+    @CircuitBreaker(name = "tagGetCB")
     @ApiResponse(responseCode = "404",
             description = "User not found",
             content = @Content(mediaType = "application/json",
@@ -28,6 +30,7 @@ public interface UserControllerDocs {
 
     @DeleteMapping
     @Operation(summary = "Delete user", tags = {"User"})
+    @CircuitBreaker(name = "tagDeleteCB")
     @ApiResponse(responseCode = "404",
             description = "User not found",
             content = @Content(mediaType = "application/json",
@@ -39,6 +42,7 @@ public interface UserControllerDocs {
     ResponseEntity<?> deleteUser(HttpServletRequest request);
 
     @PatchMapping
+    @CircuitBreaker(name = "tagUpdateCB")
     @Operation(summary = "Update user", tags = {"User"})
     @ApiResponse(responseCode = "404",
             description = "User not found",
