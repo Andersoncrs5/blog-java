@@ -3,22 +3,23 @@ package com.blog.writeapi;
 import cn.hutool.core.lang.UUID;
 import com.blog.writeapi.dtos.category.CategoryDTO;
 import com.blog.writeapi.dtos.category.CreateCategoryDTO;
+import com.blog.writeapi.dtos.tag.CreateTagDTO;
+import com.blog.writeapi.dtos.tag.TagDTO;
 import com.blog.writeapi.dtos.user.CreateUserDTO;
 import com.blog.writeapi.dtos.user.LoginUserDTO;
 import com.blog.writeapi.dtos.user.UserDTO;
 import com.blog.writeapi.utils.res.ResponseHttp;
 import com.blog.writeapi.utils.res.ResponseTokens;
 import com.blog.writeapi.utils.res.ResponseUserTest;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.OffsetDateTime;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,6 +33,57 @@ public class HelperTest {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
+
+    public TagDTO createTag(ResponseUserTest userData) throws Exception {
+        String URL = "/v1/tag";
+        Random random = new Random();
+
+        char l = (char) ('a' + random.nextInt(26));
+        char l2 = (char) ('a' + random.nextInt(26));
+        char l3 = (char) ('a' + random.nextInt(26));
+        char l4 = (char) ('a' + random.nextInt(26));
+        char l5 = (char) ('a' + random.nextInt(26));
+        char l6 = (char) ('a' + random.nextInt(26));
+        char l7 = (char) ('a' + random.nextInt(26));
+        char l8 = (char) ('a' + random.nextInt(26));
+        char l9 = (char) ('a' + random.nextInt(26));
+        char l10 = (char) ('a' + random.nextInt(26));
+
+        var dto = new CreateTagDTO(
+                "software engineer " + l + l2 + l3 + l4 + l5 + l6 + l7 + l8 + l9 + l10,
+                "software-engineer-" + l + l2 + l3 + l4 + l5 + l6 + l7 + l8 + l9 + l10,
+                "",
+                true,
+                true,
+                true
+        );
+
+        MvcResult result = mockMvc.perform(post(URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto))
+                        .header("Authorization", "Bearer " + userData.tokens().token()
+                        ))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        TypeReference<ResponseHttp<TagDTO>> typeRef = new TypeReference<>() {};
+
+        ResponseHttp<TagDTO> response = objectMapper.readValue(json, typeRef);
+
+        assertThat(response.message()).isNotBlank();
+        assertThat(response.status()).isEqualTo(true);
+        assertThat(response.data().name()).isEqualTo(dto.name());
+        assertThat(response.data().slug()).isEqualTo(dto.slug());
+        assertThat(response.data().description()).isEqualTo(dto.description());
+        assertThat(response.data().isActive()).isEqualTo(dto.isActive());
+        assertThat(response.data().isVisible()).isEqualTo(dto.isVisible());
+        assertThat(response.data().isSystem()).isEqualTo(dto.isSystem());
+        assertThat(response.data().postsCount()).isEqualTo(0L);
+        assertThat(response.data().createdAt().getMinute()).isEqualTo(OffsetDateTime.now().getMinute());
+
+        return response.data();
+    }
 
     public CategoryDTO createCategory(ResponseUserTest userData, Long parentId) throws Exception {
         String URL = "/v1/category";
