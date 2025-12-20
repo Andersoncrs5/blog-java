@@ -7,6 +7,7 @@ import com.blog.writeapi.models.TagModel;
 import com.blog.writeapi.repositories.TagRepository;
 import com.blog.writeapi.services.interfaces.ITagService;
 import com.blog.writeapi.utils.mappers.TagMapper;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class TagService implements ITagService {
     private final TagRepository repository;
     private final Snowflake generator;
     private final TagMapper mapper;
+
+    @Override
+    public Optional<TagModel> getByIdForUpdate(Long id) { return this.repository.findByIdForUpdate(id); }
 
     @Override
     public Optional<TagModel> getById(Long id) { return this.repository.findById(id); }
@@ -56,6 +60,7 @@ public class TagService implements ITagService {
 
     @Override
     @Transactional
+    @Retry(name = "update-retry")
     public TagModel update(UpdateTagDTO dto, TagModel tag) {
         mapper.merge(dto, tag);
 
