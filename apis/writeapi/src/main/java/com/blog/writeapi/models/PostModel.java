@@ -4,6 +4,7 @@ import com.blog.writeapi.models.enums.Post.PostStatusEnum;
 import com.blog.writeapi.utils.bases.models.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -13,8 +14,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
         @Index(name = "idx_post_author", columnList = "author_id")
 })
 @EntityListeners(AuditingEntityListener.class)
-@Getter @Setter @Builder(toBuilder = true)
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class PostModel extends BaseEntity {
 
     @Column(nullable = false, length = 200)
