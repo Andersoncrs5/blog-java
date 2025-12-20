@@ -2,7 +2,7 @@ package com.blog.writeapi.controllers.docs;
 
 import com.blog.writeapi.dtos.user.UpdateUserDTO;
 import com.blog.writeapi.utils.res.ResponseHttp;
-import com.blog.writeapi.utils.res.classes.user.ResponseUserDTO;
+import com.blog.writeapi.utils.res.swagger.user.ResponseUserDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

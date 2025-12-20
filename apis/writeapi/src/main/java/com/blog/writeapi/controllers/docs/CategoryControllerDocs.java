@@ -3,7 +3,7 @@ package com.blog.writeapi.controllers.docs;
 import com.blog.writeapi.dtos.category.CreateCategoryDTO;
 import com.blog.writeapi.dtos.category.UpdateCategoryDTO;
 import com.blog.writeapi.utils.res.ResponseHttp;
-import com.blog.writeapi.utils.res.classes.category.ResponseCategoryDTO;
+import com.blog.writeapi.utils.res.swagger.category.ResponseCategoryDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
