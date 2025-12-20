@@ -202,7 +202,6 @@ public class CategoryControllerTest {
         assertThat(response.data().isActive()).isEqualTo(category.isActive());
         assertThat(response.data().visible()).isEqualTo(category.visible());
         assertThat(response.data().displayOrder()).isEqualTo(category.displayOrder());
-
     }
 
     @Test
@@ -428,7 +427,7 @@ public class CategoryControllerTest {
         assertThat(response.data().isActive()).isEqualTo(dto.isActive());
         assertThat(response.data().visible()).isEqualTo(dto.visible());
         assertThat(response.data().displayOrder()).isEqualTo(dto.displayOrder());
-    }
+    } // error
 
     @Test
     void shouldUpdateCategoryNoFields() throws Exception {
