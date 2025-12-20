@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface ITagService {
     Optional<TagModel> getById(Long id);
-    Optional<TagModel> getByIdForUpdate(Long id);
     Boolean existsById(Long id);
     Optional<TagModel> getByName(String name);
     Boolean existsByName(String name);

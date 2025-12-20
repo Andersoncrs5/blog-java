@@ -46,31 +46,6 @@ public class TagServiceTest {
             .build();
 
     @Test
-    void shouldGetTagByIdForUpdate() {
-        when(repository.findByIdForUpdate(this.tag.getId())).thenReturn(Optional.of(this.tag));
-
-        Optional<TagModel> optional = this.service.getByIdForUpdate(this.tag.getId());
-
-        assertThat(optional.isEmpty()).isFalse();
-        assertThat(optional.get()).isEqualTo(this.tag);
-
-        verify(repository, times(1)).findByIdForUpdate(this.tag.getId());
-        verifyNoMoreInteractions(repository);
-    }
-
-    @Test
-    void shouldReturnNullWhenGetTagByIdForUpdate() {
-        when(repository.findByIdForUpdate(this.tag.getId())).thenReturn(Optional.empty());
-
-        Optional<TagModel> optional = this.service.getByIdForUpdate(this.tag.getId());
-
-        assertThat(optional.isEmpty()).isTrue();
-
-        verify(repository, times(1)).findByIdForUpdate(this.tag.getId());
-        verifyNoMoreInteractions(repository);
-    }
-
-    @Test
     void shouldGetTag() {
         when(repository.findById(this.tag.getId())).thenReturn(Optional.of(this.tag));
 

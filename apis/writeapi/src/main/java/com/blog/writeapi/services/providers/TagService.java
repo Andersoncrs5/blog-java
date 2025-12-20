@@ -25,24 +25,27 @@ public class TagService implements ITagService {
     private final TagMapper mapper;
 
     @Override
-    public Optional<TagModel> getByIdForUpdate(Long id) { return this.repository.findByIdForUpdate(id); }
-
-    @Override
+    @Transactional(readOnly = true)
     public Optional<TagModel> getById(Long id) { return this.repository.findById(id); }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean existsById(Long id) { return this.repository.existsById(id); }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<TagModel> getByName(String name) { return this.repository.findByName(name); }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean existsByName(String name) { return this.repository.existsByName(name); }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<TagModel> getBySlug(String slug) { return this.repository.findBySlug(slug); }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean existsBySlug(String slug) { return this.repository.existsBySlug(slug); }
 
     @Override
@@ -53,9 +56,11 @@ public class TagService implements ITagService {
     @Transactional
     public TagModel create(CreateTagDTO dto) {
         TagModel model = this.mapper.toModel(dto);
-        model.setId(this.generator.nextId());
+        model.setId(generator.nextId());
 
-        return this.repository.save(model);
+        TagModel save = this.repository.save(model);
+        log.info("Tag saved is: {}", save);
+        return save;
     }
 
     @Override
