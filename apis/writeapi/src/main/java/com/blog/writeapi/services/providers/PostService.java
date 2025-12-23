@@ -5,6 +5,7 @@ import com.blog.writeapi.dtos.post.CreatePostDTO;
 import com.blog.writeapi.dtos.post.UpdatePostDTO;
 import com.blog.writeapi.models.PostModel;
 import com.blog.writeapi.models.UserModel;
+import com.blog.writeapi.models.enums.Post.PostStatusEnum;
 import com.blog.writeapi.repositories.PostRepository;
 import com.blog.writeapi.services.interfaces.IPostService;
 import com.blog.writeapi.utils.annotations.valid.global.isId.IsId;
@@ -66,6 +67,7 @@ public class PostService implements IPostService {
 
         post.setId(generator.nextId());
         post.setAuthor(user);
+        post.setStatus(PostStatusEnum.PUBLISHED);
 
         return this.repository.save(post);
     }
