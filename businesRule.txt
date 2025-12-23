@@ -1,0 +1,47 @@
+attachments
+post_stats
+comment_stats
+post_tags
+post_likes
+comment_likes
+reactions
+post_reactions
+comment_reactions
+post_favorites
+comment_favorites
+post_categories
+post_views
+followers
+notifications
+reports
+audit_logs
+search_index
+content_flags
+shares
+stories
+direct_messages
+reading_lists
+mentions
+
+#maybe
+post_versions
+pinned_posts
+profiles
+blocks
+user_settings
+recommendations
+bans
+moderation_actions
+user_badges / achievements
+streak_logs
+chat_rooms / group_chats
+short_links / redirects
+poll_questions & poll_options
+poll_votes
+ip_blacklist / rate_limits
+api_keys
+story_views
+story_reactions
+story_highlights
+tag_reports
+tag_followers
