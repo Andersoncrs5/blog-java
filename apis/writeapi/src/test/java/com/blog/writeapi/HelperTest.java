@@ -40,7 +40,7 @@ public class HelperTest {
         String URL = "/v1/post";
 
         CreatePostDTO dto = new CreatePostDTO(
-                "All five horizons revolved around her soul, as the Earth to the Sun",
+                "Black pearl jem",
                 "black-pearl-jem",
                 """
                         Sheets of empty canvas, untouched sheets of clay
