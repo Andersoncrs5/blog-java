@@ -5,6 +5,8 @@ import com.blog.writeapi.dtos.category.CategoryDTO;
 import com.blog.writeapi.dtos.category.CreateCategoryDTO;
 import com.blog.writeapi.dtos.post.CreatePostDTO;
 import com.blog.writeapi.dtos.post.PostDTO;
+import com.blog.writeapi.dtos.postCategories.CreatePostCategoriesDTO;
+import com.blog.writeapi.dtos.postCategories.PostCategoriesDTO;
 import com.blog.writeapi.dtos.tag.CreateTagDTO;
 import com.blog.writeapi.dtos.tag.TagDTO;
 import com.blog.writeapi.dtos.user.CreateUserDTO;
@@ -35,6 +37,42 @@ public class HelperTest {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
+
+    public PostCategoriesDTO addCategoryToPost(ResponseUserTest userData, CategoryDTO categoryDTO, PostDTO postDTO) throws Exception {
+        String URL = "/v1/post-category";
+
+        CreatePostCategoriesDTO dto = new CreatePostCategoriesDTO(
+                postDTO.id(),
+                categoryDTO.id(),
+                5,
+                true,
+                true
+        );
+
+        MvcResult result = this.mockMvc.perform(post(URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto))
+                        .header("Authorization", "Bearer " + userData.tokens().token()
+                        ))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        TypeReference<ResponseHttp< PostCategoriesDTO>> typeRef = new TypeReference<>() {};
+
+        ResponseHttp<PostCategoriesDTO> response = objectMapper.readValue(json, typeRef);
+
+        assertThat(response.message()).isNotBlank();
+        assertThat(response.status()).isEqualTo(true);
+
+        assertThat(response.data().category().id()).isEqualTo(categoryDTO.id());
+        assertThat(response.data().post().id()).isEqualTo(postDTO.id());
+        assertThat(response.data().active()).isEqualTo(dto.active());
+        assertThat(response.data().primary()).isEqualTo(dto.primary());
+        assertThat(response.data().displayOrder()).isEqualTo(dto.displayOrder());
+
+        return response.data();
+    }
 
     public PostDTO createPost(ResponseUserTest userData) throws Exception {
         String URL = "/v1/post";
