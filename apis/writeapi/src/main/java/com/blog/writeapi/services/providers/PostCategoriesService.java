@@ -82,10 +82,32 @@ public class PostCategoriesService implements IPostCategoriesService {
     @Override
     @Transactional
     @Retry(name = "update-retry")
+    @Deprecated
     public PostCategoriesModel update(
             @NotNull UpdatePostCategoriesDTO dto,
             @NotNull PostCategoriesModel model
             ) {
+
+        this.mapper.merge(dto, model);
+
+        return this.repository.save(model);
+    }
+
+    @Override
+    @Transactional
+    @Retry(name = "update-retry")
+    public PostCategoriesModel updatev2(
+            @NotNull UpdatePostCategoriesDTO dto,
+            @NotNull PostCategoriesModel model
+            ) {
+        if (dto.primary() != null && dto.primary() && !model.isPrimary()) {
+            repository.findByPrimaryTrueAndPost(model.getPost())
+                    .ifPresent(oldPrimary -> {
+                        oldPrimary.setPrimary(false);
+                        repository.save(oldPrimary);
+                    });
+        }
+
         this.mapper.merge(dto, model);
 
         return this.repository.save(model);

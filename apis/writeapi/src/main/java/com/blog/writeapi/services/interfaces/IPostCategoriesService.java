@@ -11,6 +11,10 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Optional;
 
 public interface IPostCategoriesService {
+    PostCategoriesModel updatev2(
+            @NotNull UpdatePostCategoriesDTO dto,
+            @NotNull PostCategoriesModel model
+    );
     Boolean existsByPostAndCategory(
             @NotNull PostModel post,
             @NotNull CategoryModel category
@@ -24,6 +28,7 @@ public interface IPostCategoriesService {
             @NotNull PostModel post,
             @NotNull CategoryModel category
     );
+    @Deprecated
     PostCategoriesModel update(
             @NotNull UpdatePostCategoriesDTO dto,
             @NotNull PostCategoriesModel model
