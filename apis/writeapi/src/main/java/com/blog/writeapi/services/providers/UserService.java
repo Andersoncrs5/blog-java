@@ -6,6 +6,7 @@ import com.blog.writeapi.dtos.user.UpdateUserDTO;
 import com.blog.writeapi.models.UserModel;
 import com.blog.writeapi.repositories.UserRepository;
 import com.blog.writeapi.services.interfaces.IUserService;
+import com.blog.writeapi.utils.exceptions.ModelNotFoundException;
 import com.blog.writeapi.utils.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,14 @@ public class UserService implements IUserService {
     private final UserMapper mapper;
     private final Snowflake snowflakeIdGenerator;
     private final Argon2PasswordEncoder encoder;
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserModel GetByIdSimple(Long id){
+        return this.repository.findById(id).orElseThrow(
+                () -> new ModelNotFoundException("User not found")
+        );
+    }
 
     @Override
     @Transactional(readOnly = true)

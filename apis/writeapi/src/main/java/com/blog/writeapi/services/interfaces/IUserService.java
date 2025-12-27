@@ -7,6 +7,7 @@ import com.blog.writeapi.models.UserModel;
 import java.util.Optional;
 
 public interface IUserService {
+    UserModel GetByIdSimple(Long id);
     Optional<UserModel> GetById(Long id);
     Boolean ExistsById(Long id);
     void Delete(UserModel user);
