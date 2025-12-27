@@ -27,6 +27,6 @@ public class ExistsPostByIdValidator implements ConstraintValidator<ExistsPostBy
             ).addConstraintViolation();
         }
 
-        return exists;
+        return !exists;
     }
 }
