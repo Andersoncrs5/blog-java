@@ -42,7 +42,4 @@ public class PostTagModel extends BaseEntity {
 
     @Column(name = "is_visible", nullable = false)
     private boolean visible;
-
-    @Column(name = "display_order")
-    private Integer displayOrder = 0;
 }
