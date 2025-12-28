@@ -7,6 +7,8 @@ import com.blog.writeapi.dtos.category.UpdateCategoryDTO;
 import com.blog.writeapi.models.CategoryModel;
 import com.blog.writeapi.repositories.CategoryRepository;
 import com.blog.writeapi.services.interfaces.ICategoryService;
+import com.blog.writeapi.utils.annotations.valid.global.isId.IsId;
+import com.blog.writeapi.utils.annotations.valid.global.slug.Slug;
 import com.blog.writeapi.utils.exceptions.ModelNotFoundException;
 import com.blog.writeapi.utils.mappers.CategoryMapper;
 import io.github.resilience4j.retry.annotation.Retry;
@@ -14,11 +16,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 
 @Slf4j
 @Service
+@Validated
 @RequiredArgsConstructor
 public class CategoryService implements ICategoryService {
 
@@ -28,17 +32,17 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<CategoryModel> getById(Long id) { return this.repository.findById(id); }
+    public Optional<CategoryModel> getById(@IsId Long id) { return this.repository.findById(id); }
 
     @Override
     @Transactional(readOnly = true)
-    public CategoryModel getByIdSimple(Long id) {
+    public CategoryModel getByIdSimple(@IsId Long id) {
         return this.repository.findById(id).orElseThrow(() -> new ModelNotFoundException("Category not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Boolean existsById(Long id) { return repository.existsById(id); }
+    public Boolean existsById(@IsId Long id) { return repository.existsById(id); }
 
     @Override
     @Transactional
@@ -54,11 +58,11 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<CategoryModel> getBySlug(String slug) { return this.repository.findBySlug(slug); }
+    public Optional<CategoryModel> getBySlug(@Slug String slug) { return this.repository.findBySlug(slug); }
 
     @Override
     @Transactional(readOnly = true)
-    public Boolean existsBySlug(String slug) { return repository.existsBySlug(slug); }
+    public Boolean existsBySlug(@Slug String slug) { return repository.existsBySlug(slug); }
 
     /**
      * @deprecated Use {@link #create(CreateCategoryDTO, CategoryModel)} instead.
