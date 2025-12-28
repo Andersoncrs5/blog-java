@@ -55,4 +55,7 @@ public class PostModel extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PostTagModel> tags;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CommentModel> comments;
+
 }

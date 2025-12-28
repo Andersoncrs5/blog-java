@@ -47,4 +47,7 @@ public class UserModel extends BaseEntity {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PostModel> posts;
 
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CommentModel> comments;
+
 }
