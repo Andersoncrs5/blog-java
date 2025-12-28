@@ -1,6 +1,7 @@
 package com.blog.writeapi.models;
 
 import com.blog.writeapi.utils.bases.models.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -50,6 +51,7 @@ public class TagModel extends BaseEntity {
     @Column(name = "last_used_at")
     private OffsetDateTime lastUsedAt;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PostTagModel> tags;
 }
