@@ -12,6 +12,7 @@ import com.blog.writeapi.utils.annotations.valid.global.slug.Slug;
 import com.blog.writeapi.utils.exceptions.ModelNotFoundException;
 import com.blog.writeapi.utils.mappers.CategoryMapper;
 import io.github.resilience4j.retry.annotation.Retry;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional
-    public void delete(CategoryModel category) { this.repository.delete(category); }
+    public void delete(@NotNull CategoryModel category) { this.repository.delete(category); }
 
     @Override
     @Transactional(readOnly = true)

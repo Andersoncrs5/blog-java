@@ -5,6 +5,7 @@ import com.blog.writeapi.dtos.category.UpdateCategoryDTO;
 import com.blog.writeapi.models.CategoryModel;
 import com.blog.writeapi.utils.annotations.valid.global.isId.IsId;
 import com.blog.writeapi.utils.annotations.valid.global.slug.Slug;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Optional;
 
@@ -12,7 +13,7 @@ public interface ICategoryService {
     Optional<CategoryModel> getById(@IsId Long id);
     CategoryModel getByIdSimple(@IsId Long id);
     Boolean existsById(@IsId Long id);
-    void delete(CategoryModel category);
+    void delete(@NotNull CategoryModel category);
     @Deprecated()
     CategoryModel create(CreateCategoryDTO dto);
     CategoryModel create(CreateCategoryDTO dto, CategoryModel categoryModel);
