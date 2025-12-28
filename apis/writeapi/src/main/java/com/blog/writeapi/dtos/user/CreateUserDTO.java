@@ -1,8 +1,8 @@
 package com.blog.writeapi.dtos.user;
 
+import com.blog.writeapi.utils.annotations.valid.global.emailConstraint.EmailConstraint;
 import com.blog.writeapi.utils.annotations.valid.user.uniqueEmail.UniqueEmail;
 import com.blog.writeapi.utils.annotations.valid.user.uniqueUsername.UniqueUsername;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotBlank;
 
@@ -16,9 +16,7 @@ public record CreateUserDTO(
         @UniqueUsername
         String username,
 
-        @Size(min = 10, max = 150)
-        @NotBlank
-        @Email
+        @EmailConstraint
         @UniqueEmail
         String email,
 
