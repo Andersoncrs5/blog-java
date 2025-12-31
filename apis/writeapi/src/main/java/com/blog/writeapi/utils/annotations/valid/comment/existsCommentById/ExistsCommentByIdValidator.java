@@ -12,7 +12,6 @@ public class ExistsCommentByIdValidator implements ConstraintValidator<ExistsCom
 
     private final CommentRepository repository;
 
-
     @Override
     public boolean isValid(Long value, ConstraintValidatorContext context) {
         if (value == null) {
@@ -28,6 +27,6 @@ public class ExistsCommentByIdValidator implements ConstraintValidator<ExistsCom
             ).addConstraintViolation();
         }
 
-        return !exists;
+        return exists;
     }
 }
