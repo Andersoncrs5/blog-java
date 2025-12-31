@@ -2,6 +2,7 @@ package com.blog.writeapi.models;
 
 import com.blog.writeapi.models.enums.comment.CommentStatusEnum;
 import com.blog.writeapi.utils.bases.models.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,7 +41,7 @@ public class CommentModel extends BaseEntity {
     @JoinColumn(name = "post_id", nullable = false, columnDefinition = "BIGINT UNSIGNED")
     private PostModel post;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", nullable = false, columnDefinition = "BIGINT UNSIGNED")
     private UserModel author;
 
@@ -48,6 +49,7 @@ public class CommentModel extends BaseEntity {
     @JoinColumn(name = "parent_id", columnDefinition = "BIGINT UNSIGNED")
     private CommentModel parent;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<CommentModel> replies;
 
