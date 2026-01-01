@@ -3,6 +3,7 @@ package com.blog.writeapi.integration;
 import com.blog.writeapi.HelperTest;
 import com.blog.writeapi.dtos.comment.CommentDTO;
 import com.blog.writeapi.dtos.comment.CreateCommentDTO;
+import com.blog.writeapi.dtos.comment.UpdateCommentDTO;
 import com.blog.writeapi.dtos.post.PostDTO;
 import com.blog.writeapi.repositories.CommentRepository;
 import com.blog.writeapi.repositories.PostCategoriesRepository;
@@ -20,9 +21,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -176,5 +177,101 @@ public class CommentControllerTest {
         assertThat(response.data().user().id()).isEqualTo(userData.userDTO().id());
     }
 
+    //UPDATE
+    @Test
+    void shouldUpdateCommentAllField() throws Exception {
+        ResponseUserTest userData = this.helper.createUser();
+        PostDTO post = this.helper.createPost(userData);
+        CommentDTO comment = this.helper.createComment(userData, post, null);
+
+        UpdateCommentDTO dto = new UpdateCommentDTO(
+                """
+                        NewContentNewContentNewContentNewContentNewContentNewContentNewContent
+                        NewContentNewContentNewContentNewContentNewContentNewContentNewContent
+                        NewContentNewContentNewContentNewContentNewContentNewContentNewContent
+                        NewContentNewContentNewContentNewContentNewContentNewContentNewContent
+                        NewContentNewContentNewContentNewContentNewContentNewContentNewContent
+                        NewContentNewContentNewContentNewContentNewContentNewContentNewContent
+                        NewContentNewContentNewContentNewContentNewContentNewContentNewContent
+                        NewContentNewContentNewContentNewContentNewContentNewContentNewContent
+                        """
+        );
+
+        MvcResult result = this.mockMvc.perform(patch(this.URL + "/" + comment.id())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto))
+                .header("Authorization", "Bearer " + userData.tokens().token())
+        ).andExpect(status().isOk()).andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        TypeReference<ResponseHttp<CommentDTO>> typeRef = new TypeReference<>() {};
+
+        ResponseHttp<CommentDTO> response = objectMapper.readValue(json, typeRef);
+
+        assertThat(response.message()).isNotBlank();
+        assertThat(response.status()).isEqualTo(true);
+
+        assertThat(response.data().id()).isEqualTo(comment.id());
+        assertThat(response.data().content()).isEqualTo(dto.content());
+        assertThat(response.data().parentId()).isEqualTo(comment.parentId());
+
+    }
+
+    @Test
+    void shouldUpdateCommentNoField() throws Exception {
+        ResponseUserTest userData = this.helper.createUser();
+        PostDTO post = this.helper.createPost(userData);
+        CommentDTO comment = this.helper.createComment(userData, post, null);
+
+        UpdateCommentDTO dto = new UpdateCommentDTO(
+                null
+        );
+
+        MvcResult result = this.mockMvc.perform(patch(this.URL + "/" + comment.id())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto))
+                .header("Authorization", "Bearer " + userData.tokens().token())
+        ).andExpect(status().isOk()).andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        TypeReference<ResponseHttp<CommentDTO>> typeRef = new TypeReference<>() {};
+
+        ResponseHttp<CommentDTO> response = objectMapper.readValue(json, typeRef);
+
+        assertThat(response.message()).isNotBlank();
+        assertThat(response.status()).isEqualTo(true);
+
+        assertThat(response.data().id()).isEqualTo(comment.id());
+        assertThat(response.data().content()).isEqualTo(comment.content());
+        assertThat(response.data().parentId()).isEqualTo(comment.parentId());
+
+    }
+
+    @Test
+    void shouldReturnNotFoundUpdateComment() throws Exception {
+        ResponseUserTest userData = this.helper.createUser();
+        PostDTO post = this.helper.createPost(userData);
+        CommentDTO comment = this.helper.createComment(userData, post, null);
+
+        UpdateCommentDTO dto = new UpdateCommentDTO(
+                null
+        );
+
+        MvcResult result = this.mockMvc.perform(patch(this.URL + "/" + (comment.id()+1))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto))
+                .header("Authorization", "Bearer " + userData.tokens().token())
+        ).andExpect(status().isNotFound()).andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        TypeReference<ResponseHttp<Object>> typeRef = new TypeReference<>() {};
+
+        ResponseHttp<Object> response = objectMapper.readValue(json, typeRef);
+
+        assertThat(response.message()).isNotBlank();
+        assertThat(response.traceId()).isNotBlank();
+        assertThat(response.status()).isEqualTo(false);
+
+    }
 
 }
