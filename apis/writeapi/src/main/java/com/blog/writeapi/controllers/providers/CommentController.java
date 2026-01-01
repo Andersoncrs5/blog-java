@@ -3,6 +3,7 @@ package com.blog.writeapi.controllers.providers;
 import com.blog.writeapi.controllers.docs.CommentControllerDocs;
 import com.blog.writeapi.dtos.comment.CommentDTO;
 import com.blog.writeapi.dtos.comment.CreateCommentDTO;
+import com.blog.writeapi.dtos.comment.UpdateCommentDTO;
 import com.blog.writeapi.models.CommentModel;
 import com.blog.writeapi.models.PostModel;
 import com.blog.writeapi.models.UserModel;
@@ -88,6 +89,29 @@ public class CommentController implements CommentControllerDocs {
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
+    }
+
+    @Override
+    @IsAuthorComment
+    public ResponseEntity<?> update(
+            @PathVariable @IsId Long id,
+            @Valid @RequestBody UpdateCommentDTO dto,
+            HttpServletRequest request
+            ) {
+        CommentModel comment = this.service.getByIdSimple(id);
+
+        CommentModel update = this.service.update(dto, comment);
+
+        ResponseHttp<CommentDTO> res = new ResponseHttp<>(
+                this.mapper.toDTO(update),
+                "Comment updated with successfully",
+                UUID.randomUUID().toString(),
+                1,
+                true,
+                OffsetDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
 }
