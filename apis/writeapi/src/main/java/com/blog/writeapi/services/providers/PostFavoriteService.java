@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @Validated
@@ -36,6 +38,12 @@ public class PostFavoriteService implements IPostFavoriteService {
     @Transactional(readOnly = true)
     public Boolean existsByPostAndUser(PostModel post, UserModel user) {
         return this.repository.existsByPostAndUser(post, user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<PostFavoriteModel> getByPostAndUser(PostModel post, UserModel user) {
+        return this.repository.findByPostAndUser(post, user);
     }
 
     @Override
