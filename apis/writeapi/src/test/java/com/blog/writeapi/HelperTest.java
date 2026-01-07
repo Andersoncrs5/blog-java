@@ -5,6 +5,7 @@ import com.blog.writeapi.dtos.category.CategoryDTO;
 import com.blog.writeapi.dtos.category.CreateCategoryDTO;
 import com.blog.writeapi.dtos.comment.CommentDTO;
 import com.blog.writeapi.dtos.comment.CreateCommentDTO;
+import com.blog.writeapi.dtos.commentFavorite.CommentFavoriteDTO;
 import com.blog.writeapi.dtos.post.CreatePostDTO;
 import com.blog.writeapi.dtos.post.PostDTO;
 import com.blog.writeapi.dtos.postCategories.CreatePostCategoriesDTO;
@@ -42,6 +43,29 @@ public class HelperTest {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
+
+    public CommentFavoriteDTO addCommentWithFavorite(ResponseUserTest userData, PostDTO post, CommentDTO comment) throws Exception {
+        String URL = "/v1/comment-favorite";
+
+        MvcResult result = this.mockMvc.perform(post(URL + "/" + comment.id() + "/toggle")
+                        .header("Authorization", "Bearer " + userData.tokens().token()
+                        ))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        TypeReference<ResponseHttp<CommentFavoriteDTO>> typeRef = new TypeReference<>() {};
+
+        ResponseHttp<CommentFavoriteDTO> response = objectMapper.readValue(json, typeRef);
+
+        assertThat(response.message()).isNotBlank();
+        assertThat(response.traceId()).isNotBlank();
+        assertThat(response.status()).isEqualTo(true);
+        assertThat(response.data().comment().id()).isEqualTo(comment.id());
+        assertThat(response.data().user().id()).isEqualTo(userData.userDTO().id());
+
+        return response.data();
+    }
 
     public void addPostWithFavorite(ResponseUserTest userData, PostDTO post) throws Exception {
         MvcResult result = this.mockMvc.perform(post("/v1/post-favorite/" + post.id())
